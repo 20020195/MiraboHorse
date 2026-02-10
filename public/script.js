@@ -96,10 +96,26 @@ function initHost() {
     const playerCountValue = document.getElementById('player-count-value');
     const celebrationOverlay = document.getElementById('celebration-overlay');
 
-    // Keyboard event listener for 'R' key to restart game
+    // Keyboard event listener for shortcuts
     document.addEventListener('keydown', (e) => {
-        if ((e.key === 'r' || e.key === 'R') && celebrationOverlay.classList.contains('active')) {
-            resetGame();
+        // Shift + R: Return to lobby (from anywhere)
+        if ((e.key === 'r' || e.key === 'R') && e.shiftKey) {
+            resetGame(); // This returns to lobby
+        }
+        // R only: Restart game during celebration or racing
+        else if ((e.key === 'r' || e.key === 'R') && !e.shiftKey) {
+            // During celebration overlay
+            if (celebrationOverlay.classList.contains('active')) {
+                resetGame();
+            }
+            // During active gameplay - restart from beginning
+            else if (gameScreen.style.display === 'flex' || gameScreen.style.display === 'block') {
+                // Reset to lobby then immediately restart
+                socket.emit('reset_game');
+                setTimeout(() => {
+                    socket.emit('start_game');
+                }, 200); // Wait for reset to complete
+            }
         }
     });
 
