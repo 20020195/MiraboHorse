@@ -96,6 +96,13 @@ function initHost() {
     const playerCountValue = document.getElementById('player-count-value');
     const celebrationOverlay = document.getElementById('celebration-overlay');
 
+    // Keyboard event listener for 'R' key to restart game
+    document.addEventListener('keydown', (e) => {
+        if ((e.key === 'r' || e.key === 'R') && celebrationOverlay.classList.contains('active')) {
+            resetGame();
+        }
+    });
+
     const lobbyScreen = document.getElementById('lobby-screen');
     const gameScreen = document.getElementById('game-screen');
 
