@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tham gia Đua Ngựa</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="celebration.css">
+</head>
+
+<body id="player-view">
+    <div id="waiting-screen">
+        <h1 class="player-title">XUÂN BÍNH NGỌ 2026</h1>
+        <h2>Đang chờ chủ phòng...</h2>
+        <div class="loader">🐎</div>
+    </div>
+
+    <div class="tap-area" id="tap-area" style="display: none;">
+        <h2 style="margin-bottom: 30px;">NHẤN LIÊN TỤC!</h2>
+        <button class="tap-btn" id="heart-btn">
+            <img src="assets/heart.png" alt="Heart">
+        </button>
+    </div>
+
+    <div id="celebration-overlay">
+        <h1 class="celebration-text">Chúc mừng năm mới!</h1>
+        <h2 class="sub-text">Mã Đáo Cát Tường</h2>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="fireworks.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Init Player logic
+        initPlayer();
+    </script>
+</body>
+
+</html>

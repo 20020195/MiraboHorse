@@ -1,0 +1,811 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+:root {
+    --primary-red: #8B0000;
+    --primary-gold: #FFD700;
+    --accent-gold: #F4C430;
+    --bg-cream: #FFF8E7;
+    --text-dark: #2C0606;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-dark);
+    overflow: hidden;
+    background-color: var(--bg-cream);
+}
+
+/* --- Host View (Landscape) --- */
+#host-view {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('assets/bg.png') no-repeat center center/cover;
+}
+
+/* Lobby Screen */
+#lobby-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    color: var(--primary-gold);
+    backdrop-filter: blur(5px);
+}
+
+.lobby-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px var(--primary-red);
+}
+
+.qr-container-large {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#qr-code-large {
+    width: 300px;
+    /* Big QR */
+    height: 300px;
+    object-fit: contain;
+}
+
+.join-instruction {
+    font-size: 1.5rem;
+    color: var(--primary-red);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.lobby-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.player-count-large {
+    font-size: 2rem;
+    background: rgba(255, 0, 0, 0.6);
+    padding: 10px 30px;
+    border-radius: 30px;
+    border: 2px solid var(--primary-gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#player-count-value {
+    font-weight: bold;
+    font-size: 2.5rem;
+}
+
+#start-btn {
+    background: linear-gradient(to bottom, #FFD700, #F4C430);
+    color: #8B0000;
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 15px 50px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Playfair Display', serif;
+}
+
+#start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(255, 215, 0, 0.6);
+}
+
+#start-btn:active {
+    transform: scale(0.95);
+}
+
+/* Gameplay Screen */
+#game-screen {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    /* Prevent parallax overflow */
+}
+
+/* Parallax Background Layers */
+.parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    /* Double width for seamless loop */
+    height: 100%;
+    background-size: 50% 100%;
+    /* Each image takes half */
+    background-repeat: repeat-x;
+    will-change: transform;
+}
+
+.parallax-background {
+    background-image: url('assets/background.png');
+    z-index: 1;
+    animation: parallax-slow 60s linear infinite;
+    animation-play-state: paused;
+}
+
+.parallax-midground {
+    background-image: url('assets/midground.png');
+    z-index: 2;
+    animation: parallax-medium 40s linear infinite;
+    animation-play-state: paused;
+}
+
+.parallax-foreground {
+    background-image: url('assets/foreground.png');
+    z-index: 3;
+    /* Static - no animation */
+}
+
+/* Activate parallax when running */
+body.is-running .parallax-background {
+    animation-play-state: running;
+}
+
+body.is-running .parallax-midground {
+    animation-play-state: running;
+}
+
+/* Parallax Animations */
+@keyframes parallax-slow {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes parallax-medium {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes parallax-fast {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.race-track {
+    position: relative;
+    width: 100%;
+    height: 30vh;
+    z-index: 10;
+    /* Above parallax layers */
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.finish-line {
+    position: fixed;
+    right: 50px;
+    bottom: 0;
+    /* Touch bottom edge */
+    height: 28vh;
+    /* Same height as race-track */
+    width: 15px;
+    background: repeating-linear-gradient(45deg,
+            var(--primary-gold),
+            var(--primary-gold) 10px,
+            var(--primary-red) 10px,
+            var(--primary-red) 20px);
+    box-shadow: 0 0 15px var(--primary-gold);
+    z-index: 9;
+    /* Above race-track */
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 80%;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--primary-gold);
+    border-radius: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    align-self: center;
+    box-shadow: 0 0 10px var(--primary-red);
+    z-index: 15;
+    /* Above race-track */
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #FF4500, #FFD700);
+    border-radius: 20px;
+    transition: width 0.2s linear;
+    box-shadow: 0 0 5px #FFD700;
+}
+
+.heart-counter {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    /* Will be updated via JS */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    color: var(--primary-gold);
+    text-shadow: 1px 1px 2px black;
+    z-index: 2;
+    transition: left 0.2s linear;
+    margin-left: 10px;
+    /* Offset from exact progress edge */
+}
+
+.heart-icon {
+    font-size: 1.5rem;
+    animation: heartbeat 1s infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+
+    15% {
+        transform: scale(1.3);
+    }
+
+    30% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.3);
+    }
+
+    60% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.horse {
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    width: 350px;
+    height: auto;
+    transition: left 0.5s linear, transform 0.2s ease;
+    z-index: 10;
+    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.5));
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+}
+
+.horse.running {
+    animation: bounce 0.6s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+/* Dust Effect */
+.dust-container {
+    position: absolute;
+    bottom: 10px;
+    left: 30px;
+    width: 80px;
+    height: 50px;
+    z-index: -1;
+    display: none;
+    overflow: visible;
+}
+
+.horse.running .dust-container {
+    display: block;
+}
+
+.dust {
+    position: absolute;
+    width: 30px;
+    /* Larger particles */
+    height: 30px;
+    background: radial-gradient(circle, rgba(236, 236, 234, 0.9) 0%, rgba(160, 140, 110, 0.3) 70%, transparent 100%);
+    border-radius: 50%;
+    opacity: 0;
+    animation: puff 0.8s infinite ease-out;
+    filter: blur(2px);
+    /* Softer edges */
+}
+
+.dust:nth-child(1) {
+    left: 5px;
+    bottom: 0px;
+    animation-delay: 0s;
+}
+
+.dust:nth-child(2) {
+    left: 20px;
+    bottom: 5px;
+    animation-delay: 0.1s;
+}
+
+.dust:nth-child(3) {
+    left: 10px;
+    bottom: 10px;
+    animation-delay: 0.2s;
+}
+
+.dust:nth-child(4) {
+    left: 30px;
+    bottom: 2px;
+    animation-delay: 0.15s;
+}
+
+.dust:nth-child(5) {
+    left: 15px;
+    bottom: 15px;
+    animation-delay: 0.3s;
+}
+
+.dust:nth-child(6) {
+    left: 25px;
+    bottom: 8px;
+    animation-delay: 0.25s;
+}
+
+.dust:nth-child(7) {
+    left: 8px;
+    bottom: 3px;
+    animation-delay: 0.35s;
+}
+
+.dust:nth-child(8) {
+    left: 18px;
+    bottom: 12px;
+    animation-delay: 0.4s;
+}
+
+@keyframes puff {
+    0% {
+        transform: translate(0, 0) scale(0.3);
+        opacity: 0.95;
+    }
+
+    100% {
+        transform: translate(-40px, -25px) scale(3.5);
+        opacity: 0;
+    }
+}
+
+/* --- Player View (Mobile) --- */
+#player-view {
+    width: 100vw;
+    height: 100vh;
+    /* Festive Pattern Background */
+    background-color: #8B0000;
+    background-image:
+        radial-gradient(#FFD700 1px, transparent 1px),
+        radial-gradient(#FFD700 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: 0 0, 25px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--primary-gold);
+}
+
+.player-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-gold);
+    padding-bottom: 10px;
+}
+
+#waiting-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.loader {
+    font-size: 4rem;
+    animation: spin 2s infinite linear;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    /* Maybe just flip horizontally or something safer for emoji */
+}
+
+/* Use a better animation for emoji */
+@keyframes spin {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.5);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.tap-area {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.tap-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tap-btn:active {
+    transform: scale(0.9);
+}
+
+.tap-btn img {
+    width: 200px;
+    filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+}
+
+/* --- Shared Effects --- */
+.floating-heart {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url('assets/heart.png');
+    background-size: cover;
+    pointer-events: none;
+    animation: floatUp 2s ease-out forwards;
+    opacity: 0;
+    z-index: 20;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-300px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Celebration Overlay */
+#celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(139, 0, 0, 0.95), rgba(0, 0, 0, 0.95));
+    /* Darker red radial */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s;
+}
+
+#celebration-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.celebration-logo {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    animation: logoGlow 2s infinite;
+}
+
+.celebration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+@keyframes logoGlow {
+    0% {
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1));
+    }
+
+    100% {
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    }
+}
+
+.celebration-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    /* Larger */
+    color: var(--primary-gold);
+    text-transform: uppercase;
+    text-shadow:
+        0 0 10px #FF4500,
+        /* Orange-Red glow for Fire Horse */
+        0 0 20px #FF0000;
+    text-align: center;
+    animation: pulseText 2s infinite;
+    line-height: 1.2;
+    padding: 20px;
+    border: 4px solid var(--primary-gold);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.sub-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.5rem;
+    color: #FFF8E7;
+    /* Cream */
+    margin-top: 20px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+@keyframes pulseText {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 20px var(--primary-red);
+    }
+
+    50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 40px var(--primary-gold);
+    }
+
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 20px var(--primary-red);
+    }
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-gold);
+    animation: fall 3s linear infinite;
+    z-index: 101;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+    }
+}
+
+/* --- Sakura Effect --- */
+.petal {
+    position: absolute;
+    top: -10vh;
+    width: 15px;
+    height: 15px;
+    background: #FFB7C5;
+    /* Sakura Pink */
+    border-radius: 15px 0 15px 0;
+    opacity: 0.8;
+    z-index: 5;
+    /* Behind UI but visible */
+    pointer-events: none;
+    animation: fallSakura linear infinite;
+}
+
+@keyframes fallSakura {
+    0% {
+        transform: translate(10vw, -10px) rotate(0deg);
+        /* Start slightly right */
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-100vw, 100vh) rotate(360deg);
+        /* Move far left and down */
+        opacity: 0;
+    }
+}
+
+/* Clouds */
+.cloud {
+    position: absolute;
+    background-image: url('assets/cloud.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    width: 200px;
+    height: 120px;
+    border-radius: 0;
+    filter: none;
+    z-index: 5;
+    opacity: 0.9;
+    pointer-events: none;
+    will-change: transform;
+    animation: drift 35s linear infinite;
+    /* Always drifting slowly - no sudden stops */
+}
+
+@keyframes drift {
+    from {
+        transform: translateX(100vw);
+    }
+
+    to {
+        transform: translateX(calc(-100vw - 300px));
+    }
+}
+
+/* Hide clouds on player view (defense in depth) */
+#player-view .cloud {
+    display: none !important;
+}
+
+/* Fireworks Effect - Enhanced Sparkling Version */
+.firework-rocket {
+    position: fixed;
+    bottom: 0;
+    width: 6px;
+    height: 30px;
+    border-radius: 3px;
+    z-index: 1000;
+    animation: launch 0.7s ease-out forwards, shimmer 0.1s infinite;
+    filter: brightness(1.5);
+}
+
+@keyframes launch {
+    0% {
+        bottom: 0;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        bottom: 65vh;
+        opacity: 0.9;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        filter: brightness(1.3) saturate(1.5);
+    }
+
+    50% {
+        filter: brightness(2) saturate(2);
+    }
+}
+
+.firework-particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    z-index: 999;
+    animation: explode 2s ease-out forwards, sparkle 0.15s infinite;
+    filter: brightness(1.5) saturate(1.8);
+}
+
+@keyframes explode {
+    0% {
+        transform: translate(0, 0) scale(1.5);
+        opacity: 1;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0.3);
+        opacity: 0;
+    }
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        filter: brightness(1.5) saturate(1.8);
+        transform: scale(1);
+    }
+
+    50% {
+        filter: brightness(2.5) saturate(2.5);
+        transform: scale(1.3);
+    }
+}

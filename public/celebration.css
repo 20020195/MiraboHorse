@@ -1,0 +1,48 @@
+/* Celebration Overlay Styles */
+#celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #8B0000, #FFD700);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#celebration-overlay.active {
+    display: flex;
+}
+
+.celebration-text {
+    font-size: 3rem;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    animation: glow 1.5s ease-in-out infinite;
+    z-index: 5;
+    position: relative;
+}
+
+.sub-text {
+    font-size: 1.5rem;
+    color: #FFD700;
+    margin-top: 10px;
+    z-index: 5;
+    position: relative;
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    50% {
+        text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 50px rgba(255, 215, 0, 0.7);
+    }
+}

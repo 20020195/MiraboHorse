@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Đáo Cát Tường - Host</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="host-view">
+    <!-- Lobby Screen -->
+    <div id="lobby-screen">
+        <h1 class="lobby-title">Mã Đáo Cát Tường</h1>
+
+        <div class="qr-container-large">
+            <img id="qr-code-large" src="" alt="Scan to Join">
+            <p class="join-instruction">Quét mã để tham gia phòng đua</p>
+        </div>
+
+        <div class="lobby-controls">
+            <div class="player-count-large">
+                <span id="player-count-value">0</span>
+                <span class="label">Người chơi đã sẵn sàng</span>
+            </div>
+            <button id="start-btn" onclick="startGame()">BẮT ĐẦU ĐUA</button>
+        </div>
+    </div>
+
+    <!-- Gameplay Screen (Initially Hidden) -->
+    <div id="game-screen" style="display: none;">
+        <!-- Parallax Background Layers -->
+        <div class="parallax-layer parallax-background"></div>
+        <div class="parallax-layer parallax-midground"></div>
+        <div class="parallax-layer parallax-foreground"></div>
+
+        <div class="main-content">
+            <!-- Floating hearts will be appended here -->
+        </div>
+
+        <div class="race-track">
+            <div class="horse" id="horse">
+                <img src="assets/horse1.gif" alt="Horse" style="width:100%;">
+                <div class="dust-container">
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                    <div class="dust"></div>
+                </div>
+            </div>
+            <div class="finish-line"></div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+            <div class="heart-counter" id="heart-counter">
+                <span class="heart-icon">💖</span>
+                <span id="heart-count-value">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="celebration-overlay">
+        <img src="assets/logo_white.png" alt="Logo" class="celebration-logo">
+        <div class="celebration-content">
+            <h1 class="celebration-text">Mã Đáo Cát Tường</h1>
+            <h2 class="sub-text">XUÂN BÍNH NGỌ 2026</h2>
+        </div>
+        <button onclick="resetGame()"
+            style="margin-top: 50px; padding: 10px 20px; font-size: 1.2rem; cursor: pointer;">Chơi Lại</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="fireworks.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Init Host logic
+        initHost();
+    </script>
+</body>
+
+</html>
