@@ -143,7 +143,9 @@ function initHost() {
             const heartCountValue = document.getElementById('heart-count-value');
             if (heartCounter && heartCountValue) {
                 heartCountValue.innerText = state.totalHearts || 0;
-                heartCounter.style.left = `${state.progress}%`;
+                // Clamp position between 5% and 98% to ensure heart counter is always visible
+                const clampedProgress = Math.max(5, Math.min(98, state.progress * 0.93 + 5));
+                heartCounter.style.left = `${clampedProgress}%`;
             }
 
             // Restore running animation and parallax if in progress
@@ -204,9 +206,9 @@ function initHost() {
         const heartCountValue = document.getElementById('heart-count-value');
         if (heartCounter && heartCountValue) {
             heartCountValue.innerText = totalHearts;
-            // Position at the end of progress bar using percentage
-            // CSS translateX(-100%) will pull it back to stay within container
-            heartCounter.style.left = `${progress}%`;
+            // Clamp position between 5% and 98% to ensure heart counter is always visible
+            const clampedProgress = Math.max(5, Math.min(100, progress * 0.95 + 5));
+            heartCounter.style.left = `${clampedProgress}%`;
         }
 
         if (progress > 0 && progress < 100) {

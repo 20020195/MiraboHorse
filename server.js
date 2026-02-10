@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const REQUIRED_HEARTS = 200;
+const REQUIRED_HEARTS = 3686;
 
 // Serve static files from 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
